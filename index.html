@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <title>Webmaster Steve's Florida Highway and Street Cameras</title>
 <style>
-img {width:33%; height:33%;}
+canvas {border:#666 1px solid;background-color: #cccccc;}
 </style>
 <script>
 function loadhand() {
@@ -19,10 +19,23 @@ function loadhand() {
 			} else if ((imgset[i].naturalWidth == 309) && (imgset[i].naturalHeight == 206)) {
 				imgset[i].style.display = 'none';
 			} else {
-				if (imgset[i].width != 320)
-					imgset[i].width = 320;
-				if (imgset[i].height != 240)
-					imgset[i].height = 240;
+				var wid = (window.innerWidth - 50) * 0.25
+				if (imgset[i].width != wid)
+					imgset[i].width = wid;
+			}
+		}
+	}
+}
+
+function rearrange(mfact) {
+	var imgset = document.getElementsByTagName('img');
+
+	for (var i = 0; i < imgset.length ; i++) {
+		if (imgset[i].src.indexOf('//fl511.com/') != -1) {
+			if (imgset[i].style.display != 'none') {
+				var wid = (window.innerWidth - 50) * mfact
+				if (imgset[i].width != wid)
+					imgset[i].width = wid;
 			}
 		}
 	}
@@ -33,7 +46,14 @@ window.addEventListener('load', loadhand, false);
 
 </head><body>
 <h1>Webmaster Steve's Florida Highway and Street Cameras</h1>
-<p><a href="https://steveschustack-pixel.github.io/weather/">Weather</a></p>
+<p>Rearrange: 
+<button onclick="rearrange(1)">1 Up</button>
+<button onclick="rearrange(0.5)">2 Up</button>
+<button onclick="rearrange(0.33)">3 Up</button>
+<button onclick="rearrange(0.25)">4 Up</button>
+- - -
+<a href="https://steveschustack-pixel.github.io/weather/">Weather</a>
+</p>
 <img src="https://fl511.com/map/Cctv/5435" alt="cam 0">
 <img src="https://fl511.com/map/Cctv/5436" alt="cam 1">
 <img src="https://fl511.com/map/Cctv/5438" alt="cam 2">
