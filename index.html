@@ -66,13 +66,19 @@ function rearrange(mfact) {
 }
 
 function autoplay() {
-	if  (goodimages.length == 0) {
-		alert("autoplay failed, no traffic images found");
-		return;
-	}
+	var loopTimer;
 	if (autoloops == 0) {
 		document.getElementById('candiv').style.display = 'block';
 		resize();
+	}
+	autoplay_notmr();
+	loopTimer = setTimeout(autoplay, 4000);
+}
+
+function autoplay_notmr() {
+	if  (goodimages.length == 0) {
+		alert("autoplay failed, no traffic images found");
+		return;
 	}
 	const imgcount = imgset.length;
 	canvas = document.getElementById('canvas');
@@ -96,7 +102,6 @@ function autoplay() {
 	ctx.restore(); 
 
 	++autoloops;
-	var loopTimer = setTimeout(autoplay, 4000);
 }
 
 function resize() {
@@ -106,6 +111,7 @@ function resize() {
 	canvas.width = window.innerWidth - border;
 	canvas.height = window.innerHeight - border;
 	rearrange(mfactsav);
+	autoplay_notmr();
 	//alert("resize to " + canvas.width + ", " + canvas.height);
 	/*
 	ctx = canvas.getContext('2d');
