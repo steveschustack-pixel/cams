@@ -44,7 +44,9 @@ function loadhand() {
 			//alert("img " + i + " is bad " + isbad + ", id: " + imgset[i].id);
 		}
 	}
+	window.addEventListener("resize", resize);
 }
+
 
 function rearrange(mfact) {
 	var wid;
@@ -64,6 +66,10 @@ function rearrange(mfact) {
 }
 
 function autoplay() {
+	if  (goodimages.length == 0) {
+		alert("autoplay failed, no traffic images found");
+		return;
+	}
 	if (autoloops == 0) {
 		document.getElementById('candiv').style.display = 'block';
 		resize();
@@ -75,7 +81,7 @@ function autoplay() {
 	//alert("#" + autoloops + ": good image img"+ ((autoloops % imgcount) + 1));
 	
 	var nextimg = (autoloops % imgcount) + 1;
-	// possible endless loop if no data present...fix later
+	// no possible endless loop if no data present...e
 	while (badimages["img" + nextimg] !== undefined) {
 		++autoloops;
 		++nextimg;
@@ -98,9 +104,9 @@ function resize() {
 	// Set canvas dimensions to match the window
 	canvas = document.getElementById('canvas');
 	canvas.width = window.innerWidth - border;
-	canvasWidth = canvas.width;
 	canvas.height = window.innerHeight - border;
-	canvasHeight = canvas.height;
+	rearrange(mfactsav);
+	//alert("resize to " + canvas.width + ", " + canvas.height);
 	/*
 	ctx = canvas.getContext('2d');
 	ctx.save();
