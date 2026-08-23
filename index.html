@@ -5,12 +5,25 @@
 <title>Webmaster Steve's Florida Highway and Street Cameras</title>
 <style>
 canvas {border:#666 1px solid;background-color: #cccccc;}
+.hidden {
+  display: none;
+}
+
 </style>
 <script>
+var mfactsav = 0.25;	// default 4 up
+var autoloops = 0;
+var goodimages = [];
+var badimages = [];
+var imgset;
+
+
 function loadhand() {
-	var imgset = document.getElementsByTagName('img');
+	var isbad = 0;
+	imgset = document.getElementsByTagName('img');
 
 	for (var i = 0; i < imgset.length ; i++) {
+		isbad = 1;
 		if (imgset[i].src.indexOf('//fl511.com/') != -1) {
 			if (imgset[i].naturalWidth == 540) {
 				imgset[i].style.display = 'none';
@@ -19,27 +32,84 @@ function loadhand() {
 			} else if ((imgset[i].naturalWidth == 309) && (imgset[i].naturalHeight == 206)) {
 				imgset[i].style.display = 'none';
 			} else {
-				var wid = (window.innerWidth - 50) * 0.25
+				isbad = 0;
+				var wid = (window.innerWidth - 50) * mfactsav;
+				goodimages[goodimages.length] = imgset[i].id;
 				if (imgset[i].width != wid)
 					imgset[i].width = wid;
 			}
+		}
+		if (isbad) {
+			badimages[imgset[i].id] = imgset[i].id;
+			//alert("img " + i + " is bad " + isbad + ", id: " + imgset[i].id);
 		}
 	}
 }
 
 function rearrange(mfact) {
-	var imgset = document.getElementsByTagName('img');
+	var wid;
+	imgset = document.getElementsByTagName('img');
+	
+	mfactsav = mfact;
 
 	for (var i = 0; i < imgset.length ; i++) {
 		if (imgset[i].src.indexOf('//fl511.com/') != -1) {
 			if (imgset[i].style.display != 'none') {
-				var wid = (window.innerWidth - 50) * mfact
+				wid = (window.innerWidth - 50) * mfact
 				if (imgset[i].width != wid)
 					imgset[i].width = wid;
 			}
 		}
 	}
 }
+
+function autoplay() {
+	if (autoloops == 0) {
+		document.getElementById('candiv').style.display = 'block';
+		resize();
+	}
+	const imgcount = imgset.length;
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+
+	//alert("#" + autoloops + ": good image img"+ ((autoloops % imgcount) + 1));
+	
+	var nextimg = (autoloops % imgcount) + 1;
+	// possible endless loop if no data present...fix later
+	while (badimages["img" + nextimg] !== undefined) {
+		++autoloops;
+		++nextimg;
+		if (nextimg > imgset.length)
+			nextimg = 0;
+		}
+	
+	img = document.getElementById("img" + nextimg);
+	
+	ctx.save();
+	ctx.drawImage(img, 0 , 0, canvas.width, canvas.height);
+	ctx.restore(); 
+
+	++autoloops;
+	var loopTimer = setTimeout(autoplay, 4000);
+}
+
+function resize() {
+	const border = 40;	// 20
+	// Set canvas dimensions to match the window
+	canvas = document.getElementById('canvas');
+	canvas.width = window.innerWidth - border;
+	canvasWidth = canvas.width;
+	canvas.height = window.innerHeight - border;
+	canvasHeight = canvas.height;
+	/*
+	ctx = canvas.getContext('2d');
+	ctx.save();
+	ctx.fillStyle = "rgba(200,200,200,1)";
+	ctx.fillRect (0, 0, canvasWidth, canvasHeight);
+	ctx.restore(); 
+	*/
+}  
+
 
 window.addEventListener('load', loadhand, false);
 </script>
@@ -51,80 +121,84 @@ window.addEventListener('load', loadhand, false);
 <button onclick="rearrange(0.5)">2 Up</button>
 <button onclick="rearrange(0.33)">3 Up</button>
 <button onclick="rearrange(0.25)">4 Up</button>
+<button onclick="autoplay()">AutoPlay</button>
+
 - - -
 <a href="https://steveschustack-pixel.github.io/weather/">Weather</a>
 </p>
-<img src="https://fl511.com/map/Cctv/5435" alt="cam 0">
-<img src="https://fl511.com/map/Cctv/5436" alt="cam 1">
-<img src="https://fl511.com/map/Cctv/5438" alt="cam 2">
-<img src="https://fl511.com/map/Cctv/5432" alt="cam 3">
-<img src="https://fl511.com/map/Cctv/5047" alt="cam 4">
-<img src="https://fl511.com/map/Cctv/2118" alt="cam 5">
-<img src="https://fl511.com/map/Cctv/2149" alt="cam 6">
-<img src="https://fl511.com/map/Cctv/2150" alt="cam 7">
-<img src="https://fl511.com/map/Cctv/2151" alt="cam 8">
-<img src="https://fl511.com/map/Cctv/2152" alt="cam 9">
-<img src="https://fl511.com/map/Cctv/2153" alt="cam 10">
-<img src="https://fl511.com/map/Cctv/2181" alt="cam 11">
-<img src="https://fl511.com/map/Cctv/2188" alt="cam 12">
-<img src="https://fl511.com/map/Cctv/2212" alt="cam 13">
-<img src="https://fl511.com/map/Cctv/2214" alt="cam 14">
-<img src="https://fl511.com/map/Cctv/2147" alt="cam 15">
-<img src="https://fl511.com/map/Cctv/2135" alt="cam 16">
-<img src="https://fl511.com/map/Cctv/2134" alt="cam 17">
-<img src="https://fl511.com/map/Cctv/2213" alt="cam 25">
-<img src="https://fl511.com/map/Cctv/2219" alt="cam 18">
-<img src="https://fl511.com/map/Cctv/2108" alt="cam 19">
-<img src="https://fl511.com/map/Cctv/2008" alt="cam 20">
-<img src="https://fl511.com/map/Cctv/5046" alt="cam 21">
-<img src="https://fl511.com/map/Cctv/1838" alt="cam 26">
-<img src="https://fl511.com/map/Cctv/2162" alt="cam 22">
-<img src="https://fl511.com/map/Cctv/2032" alt="cam 23">
-<img src="https://fl511.com/map/Cctv/2061" alt="cam 24">
-<img src="https://fl511.com/map/Cctv/1841" alt="cam 27">
-<img src="https://fl511.com/map/Cctv/1936" alt="cam 28">
-<img src="https://fl511.com/map/Cctv/1937" alt="cam 29">
-<img src="https://fl511.com/map/Cctv/470" alt="cam 30">
-<img src="https://fl511.com/map/Cctv/468" alt="cam 31">
-<img src="https://fl511.com/map/Cctv/450" alt="cam 31a">
-<img src="https://fl511.com/map/Cctv/473" alt="cam 31b">
-<img src="https://fl511.com/map/Cctv/480" alt="cam 31c">
-<img src="https://fl511.com/map/Cctv/598" alt="cam 31d">
-<img src="https://fl511.com/map/Cctv/1980" alt="cam 32">
-<img src="https://fl511.com/map/Cctv/1987" alt="cam 33">
-<img src="https://fl511.com/map/Cctv/3541" alt="cam 33b">
-<img src="https://fl511.com/map/Cctv/1856" alt="cam 34">
-<img src="https://fl511.com/map/Cctv/1858" alt="cam 35">
-<img src="https://fl511.com/map/Cctv/1859" alt="cam 36">
-<img src="https://fl511.com/map/Cctv/1869" alt="cam 37">
-<img src="https://fl511.com/map/Cctv/1848" alt="cam 38">
-<img src="https://fl511.com/map/Cctv/1866" alt="cam 39">
-<img src="https://fl511.com/map/Cctv/5408" alt="cam 40">
-<img src="https://fl511.com/map/Cctv/5403" alt="cam 41">
-<img src="https://fl511.com/map/Cctv/1" alt="cam 42">
-<img src="https://fl511.com/map/Cctv/5" alt="cam 43">
-<img src="https://fl511.com/map/Cctv/7" alt="cam 44">
-<img src="https://fl511.com/map/Cctv/8" alt="cam 45">
-<img src="https://fl511.com/map/Cctv/33" alt="cam 46">
-<img src="https://fl511.com/map/Cctv/608" alt="cam 47">
-<img src="https://fl511.com/map/Cctv/609" alt="cam 48">
-<img src="https://fl511.com/map/Cctv/610" alt="cam 48b">
-<img src="https://fl511.com/map/Cctv/506" alt="cam 49">
-<img src="https://fl511.com/map/Cctv/517" alt="cam 50">
-<img src="https://fl511.com/map/Cctv/518" alt="cam 51">
-<img src="https://fl511.com/map/Cctv/520" alt="cam 52">
-<img src="https://fl511.com/map/Cctv/526" alt="cam 53">
-<img src="https://fl511.com/map/Cctv/545" alt="cam 54">
-<img src="https://fl511.com/map/Cctv/2443" alt="cam 55">
-<img src="https://fl511.com/map/Cctv/3858" alt="cam 56">
-<img src="https://fl511.com/map/Cctv/3543" alt="cam 57">
-<img src="https://fl511.com/map/Cctv/3797" alt="cam 58">
-<img src="https://fl511.com/map/Cctv/2413" alt="cam 59">
-<img src="https://fl511.com/map/Cctv/2321" alt="cam 60">
-<img src="https://fl511.com/map/Cctv/2665" alt="cam 61">
-<img src="https://fl511.com/map/Cctv/2653" alt="cam 62">
-<img src="https://fl511.com/map/Cctv/2442" alt="cam 63">
-
+<div id=candiv class=hidden>
+<canvas id="canvas" width="10" height="10"></canvas>
+</div>
+<img src="https://fl511.com/map/Cctv/5435" alt="cam 0" id="img1">
+<img src="https://fl511.com/map/Cctv/5436" alt="cam 1" id="img2">
+<img src="https://fl511.com/map/Cctv/5438" alt="cam 2" id="img3">
+<img src="https://fl511.com/map/Cctv/5432" alt="cam 3" id="img4">
+<img src="https://fl511.com/map/Cctv/5047" alt="cam 4" id="img5">
+<img src="https://fl511.com/map/Cctv/2118" alt="cam 5" id="img6">
+<img src="https://fl511.com/map/Cctv/2149" alt="cam 6" id="img7">
+<img src="https://fl511.com/map/Cctv/2150" alt="cam 7" id="img8">
+<img src="https://fl511.com/map/Cctv/2151" alt="cam 8" id="img9">
+<img src="https://fl511.com/map/Cctv/2152" alt="cam 9" id="img10">
+<img src="https://fl511.com/map/Cctv/2153" alt="cam 10" id="img11">
+<img src="https://fl511.com/map/Cctv/2181" alt="cam 11" id="img12">
+<img src="https://fl511.com/map/Cctv/2188" alt="cam 12" id="img13">
+<img src="https://fl511.com/map/Cctv/2212" alt="cam 13" id="img14">
+<img src="https://fl511.com/map/Cctv/2214" alt="cam 14" id="img15">
+<img src="https://fl511.com/map/Cctv/2147" alt="cam 15" id="img16">
+<img src="https://fl511.com/map/Cctv/2135" alt="cam 16" id="img17">
+<img src="https://fl511.com/map/Cctv/2134" alt="cam 17" id="img18">
+<img src="https://fl511.com/map/Cctv/2213" alt="cam 25" id="img19">
+<img src="https://fl511.com/map/Cctv/2219" alt="cam 18" id="img20">
+<img src="https://fl511.com/map/Cctv/2108" alt="cam 19" id="img21">
+<img src="https://fl511.com/map/Cctv/2008" alt="cam 20" id="img22">
+<img src="https://fl511.com/map/Cctv/5046" alt="cam 21" id="img23">
+<img src="https://fl511.com/map/Cctv/1838" alt="cam 26" id="img24">
+<img src="https://fl511.com/map/Cctv/2162" alt="cam 22" id="img25">
+<img src="https://fl511.com/map/Cctv/2032" alt="cam 23" id="img26">
+<img src="https://fl511.com/map/Cctv/2061" alt="cam 24" id="img27">
+<img src="https://fl511.com/map/Cctv/1841" alt="cam 27" id="img28">
+<img src="https://fl511.com/map/Cctv/1936" alt="cam 28" id="img29">
+<img src="https://fl511.com/map/Cctv/1937" alt="cam 29" id="img30">
+<img src="https://fl511.com/map/Cctv/470" alt="cam 30" id="img31">
+<img src="https://fl511.com/map/Cctv/468" alt="cam 31" id="img32">
+<img src="https://fl511.com/map/Cctv/450" alt="cam 31a" id="img33">
+<img src="https://fl511.com/map/Cctv/473" alt="cam 31b" id="img34">
+<img src="https://fl511.com/map/Cctv/480" alt="cam 31c" id="img35">
+<img src="https://fl511.com/map/Cctv/598" alt="cam 31d" id="img36">
+<img src="https://fl511.com/map/Cctv/1980" alt="cam 32" id="img37">
+<img src="https://fl511.com/map/Cctv/1987" alt="cam 33" id="img38">
+<img src="https://fl511.com/map/Cctv/3541" alt="cam 33b" id="img39">
+<img src="https://fl511.com/map/Cctv/1856" alt="cam 34" id="img40">
+<img src="https://fl511.com/map/Cctv/1858" alt="cam 35" id="img41">
+<img src="https://fl511.com/map/Cctv/1859" alt="cam 36" id="img42">
+<img src="https://fl511.com/map/Cctv/1869" alt="cam 37" id="img43">
+<img src="https://fl511.com/map/Cctv/1848" alt="cam 38" id="img44">
+<img src="https://fl511.com/map/Cctv/1866" alt="cam 39" id="img45">
+<img src="https://fl511.com/map/Cctv/5408" alt="cam 40" id="img46">
+<img src="https://fl511.com/map/Cctv/5403" alt="cam 41" id="img47">
+<img src="https://fl511.com/map/Cctv/1" alt="cam 42" id="img48">
+<img src="https://fl511.com/map/Cctv/5" alt="cam 43" id="img49">
+<img src="https://fl511.com/map/Cctv/7" alt="cam 44" id="img50">
+<img src="https://fl511.com/map/Cctv/8" alt="cam 45" id="img51">
+<img src="https://fl511.com/map/Cctv/33" alt="cam 46" id="img52">
+<img src="https://fl511.com/map/Cctv/608" alt="cam 47" id="img53">
+<img src="https://fl511.com/map/Cctv/609" alt="cam 48" id="img54">
+<img src="https://fl511.com/map/Cctv/610" alt="cam 48b" id="img55">
+<img src="https://fl511.com/map/Cctv/506" alt="cam 49" id="img56">
+<img src="https://fl511.com/map/Cctv/517" alt="cam 50" id="img57">
+<img src="https://fl511.com/map/Cctv/518" alt="cam 51" id="img58">
+<img src="https://fl511.com/map/Cctv/520" alt="cam 52" id="img59">
+<img src="https://fl511.com/map/Cctv/526" alt="cam 53" id="img60">
+<img src="https://fl511.com/map/Cctv/545" alt="cam 54" id="img61">
+<img src="https://fl511.com/map/Cctv/2443" alt="cam 55" id="img62">
+<img src="https://fl511.com/map/Cctv/3858" alt="cam 56" id="img63">
+<img src="https://fl511.com/map/Cctv/3543" alt="cam 57" id="img64">
+<img src="https://fl511.com/map/Cctv/3797" alt="cam 58" id="img65">
+<img src="https://fl511.com/map/Cctv/2413" alt="cam 59" id="img66">
+<img src="https://fl511.com/map/Cctv/2321" alt="cam 60" id="img67">
+<img src="https://fl511.com/map/Cctv/2665" alt="cam 61" id="img68">
+<img src="https://fl511.com/map/Cctv/2653" alt="cam 62" id="img69">
+<img src="https://fl511.com/map/Cctv/2442" alt="cam 63" id="img70">
 
 <p>See Map: <a href="https://fl511.com/map">https://fl511.com/map</a></p>
 <p>&nbsp;</p>
