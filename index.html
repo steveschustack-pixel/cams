@@ -67,6 +67,9 @@ function rearrange(mfact) {
 
 function autoplay() {
 	var loopTimer;
+	
+	document.getElementById("autobutton").disabled = true;
+	
 	if (autoloops == 0) {
 		document.getElementById('candiv').style.display = 'block';
 		resize();
@@ -136,7 +139,7 @@ window.addEventListener('load', loadhand, false);
 <button onclick="rearrange(0.5)">2 Up</button>
 <button onclick="rearrange(0.33)">3 Up</button>
 <button onclick="rearrange(0.25)">4 Up</button>
-<button onclick="autoplay()">AutoPlay</button>
+<button onclick="autoplay()" id="autobutton">AutoPlay</button>
 
 - - -
 <a href="https://steveschustack-pixel.github.io/weather/">Weather</a>
